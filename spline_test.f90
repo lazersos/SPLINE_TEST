@@ -12,8 +12,8 @@ PROGRAM SPLINE_TEST
 
    TYPE(EZspline2_r8) :: F_spl, F_spl_mod
 
-   INTEGER, PARAMETER :: nx1 = 64
-   INTEGER, PARAMETER :: nx2 = 64
+   INTEGER, PARAMETER :: nx1 = 8
+   INTEGER, PARAMETER :: nx2 = 8
    INTEGER, PARAMETER :: bcs1(2) = (/-1,-1/)
    DOUBLE PRECISION, PARAMETER :: pi2 = 6.283185482025146D+00
 
@@ -48,8 +48,8 @@ PROGRAM SPLINE_TEST
       F_spl_mod%x2(j)=v
    enddo
 
-   F_spl%isHermite = 1
-   F_spl_mod%isHermite = 1
+   F_spl%isHermite = 0
+   F_spl_mod%isHermite = 0
 
    CALL EZspline_setup(F_spl,f,ier)
    CALL EZspline_setup(F_spl_mod,f,ier)
@@ -88,16 +88,16 @@ CONTAINS
       DOUBLE PRECISION, PARAMETER :: A = 1.0
       DOUBLE PRECISION, PARAMETER :: B = 0.25
       DOUBLE PRECISION, PARAMETER :: pi2 = 6.283185482025146D+00
-      INTEGER, PARAMETER :: MPOL = 3
+      INTEGER, PARAMETER :: MPOL = 1
       INTEGER, PARAMETER :: NTOR = 1
 
       f = 0; fu = 0; fv = 0; fuv=0;
       do m = 1, MPOL
          do n = 1, NTOR
-            f   = f   + A + B*cos(pi2*m*u+pi2*n*v)
-            fu  = fu  - B*m*pi2*sin(pi2*m*u+pi2*n*v)
-            fv  = fv  - B*n*pi2*sin(pi2*m*u+pi2*n*v)
-            fuv = fuv + B*m*pi2*n*pi2*cos(pi2*m*u+pi2*n*v)
+            f   = f   + A + B*cos(pi2*m*u+pi2*n*v) + 8.0*(v-2.0)*(u-2.0)
+            fu  = fu  - B*m*pi2*sin(pi2*m*u+pi2*n*v) + 8.0*(v-2.0)
+            fv  = fv  - B*n*pi2*sin(pi2*m*u+pi2*n*v) + 8.0*(u-2.0)
+            fuv = fuv + B*m*pi2*n*pi2*cos(pi2*m*u+pi2*n*v) + 8.0
          enddo
       enddo
    RETURN
